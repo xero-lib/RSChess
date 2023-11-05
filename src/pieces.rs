@@ -1,6 +1,3 @@
-use std::collections::HashMap;
-use std::ops::Range;
-
 use crate::board::Color::{self, *};
 
 
