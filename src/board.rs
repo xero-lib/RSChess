@@ -171,8 +171,6 @@ impl Board {
     pub fn r#move(&mut self, start: &str, end: &str) -> Result<(), &str> {
         let start = Square::string_to_u8(start);
         let end = Square::string_to_u8(end);
-        println!("{} {}", (start >> 4), (start & 0x0F));
-        println!("{} {}", (end >> 4), (end & 0x0F));
         // check legal move here
         // std::mem::swap(&mut self.0[(end >> 4) as usize][(end & 0x0F) as usize].1, &mut self.0[(start >> 4) as usize][(start & 0x0F) as usize].1);
         // self.0[(start >> 4) as usize][(start & 0x0F) as usize].1 = None;
