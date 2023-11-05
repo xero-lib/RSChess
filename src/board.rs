@@ -91,6 +91,10 @@ impl Square {
         (c as u8 - b'A' << 4) + r.to_digit(10).expect("Invalid coord string") as u8 - 1
     }
 
+    pub fn u8_to_tuple(coord: u8) -> (u8, u8) {
+        (coord >> 4, coord & 0x0F)
+    }
+
 }
 
 pub struct Board([Square; 64]); // optimize to a 1D array?}
@@ -135,10 +139,8 @@ impl Board {
     pub fn init(&mut self, _state: &str) { // impl state 
         // init pawns
         for i in 0..8 {
-            // white pawns
-            self.get_index(1, i).set_piece(Piece::from(Pawn, White));
-            // black pawns
-            self.get_index(6, i).set_piece(Piece::from(Pawn, Black));
+            self.get_index(1, i).set_piece(Piece::from(Pawn, White)); // white pawns
+            self.get_index(6, i).set_piece(Piece::from(Pawn, Black)); // black pawns
         }
 
         // init rooks
@@ -168,16 +170,42 @@ impl Board {
         self.get_index(7, 4).set_piece(Piece::from(King, Black));
     }
 
-    pub fn r#move(&mut self, start: &str, end: &str) -> Result<(), &str> {
+    pub fn r#move(&mut self, start: &str, end: &str) -> Result<(), &'static str> {
         let start = Square::string_to_u8(start);
         let end = Square::string_to_u8(end);
+        let Some(piece) = self.get_index(start & 0x0F, start >> 4).get_piece() else { return Err("No piece at start") };
+        let offsets: Vec<(i8, i8)> = match piece.r#type {
+            Pawn => {
+                match piece.color {
+                    Black => &Piece::OFFSETS_PAWN[4..][..2],
+                    White => &Piece::OFFSETS_PAWN[..4][..2],
+                }
+            },
+            Rook   => &Piece::OFFSETS_ROOK  [..],
+            Knight => &Piece::OFFSETS_KNIGHT[..],
+            Bishop => &Piece::OFFSETS_BISHOP[..],
+            Queen  => &Piece::OFFSETS_QUEEN [..],
+            King   => &Piece::OFFSETS_KING  [..],
+        }.into();
+
+        if offsets.iter().any(|offset| {
+            let tuple_start = Square::u8_to_tuple(start);
+            let tuple_end = Square::u8_to_tuple(end);
+            let possible_target: (i8, i8) =  (tuple_start.0 as i8 + offset.0, tuple_start.1 as i8 + offset.1);
+            if possible_target.0 < 0 || possible_target.0 > 7 || possible_target.1 < 0 || possible_target.1 > 7 {
+                return false;
+            }
+            return possible_target == (tuple_end.0 as i8, tuple_end.1 as i8);
+        }) {
+            self.get_index(end & 0x0F, end >> 4).set_piece(piece);
+            self.get_index(start & 0x0F, start >> 4).remove_piece();
+            return Ok(())
+        }
+
+        return Err("Illegal move")
         // check legal move here
         // std::mem::swap(&mut self.0[(end >> 4) as usize][(end & 0x0F) as usize].1, &mut self.0[(start >> 4) as usize][(start & 0x0F) as usize].1);
         // self.0[(start >> 4) as usize][(start & 0x0F) as usize].1 = None;
-        let Some(piece) = self.get_index(start & 0x0F, start >> 4).get_piece() else { return Err("No piece at start") };
-        self.get_index(end & 0x0F, end >> 4).set_piece(piece);
-        self.get_index(start & 0x0F, start >> 4).remove_piece();
-        Ok(())
     }
 
     pub fn get_state(&self) -> [Square; 64] {
