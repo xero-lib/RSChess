@@ -3,15 +3,14 @@ mod board;
 
 use board::*;
 
-fn main() -> Result<(), &'static str>{
+fn main() -> Result<(), &'static str> {
     let mut board = Board::new();
-    println!("{board}");
     board.init("");
-    println!("{board}");
     board.r#move("A2", "A3")?;
-    println!("{board}");
     board.r#move("A3", "A4")?;
-    print!("{board}");
-    board.r#move("A4", "B5")?;
+    board.r#move("A4", "A5")?;
+    board.r#move("A5", "A6")?;
+    board.r#move("A6", "B7")?;
+    println!("{board}");
     Ok(())
 }
