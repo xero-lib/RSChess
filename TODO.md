@@ -3,3 +3,4 @@
 - [ ] Add 50 move rule
 - [ ] Add Threefold repetition
 - [ ] Add unit tests
+- [ ] Add a proper README
