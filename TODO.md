@@ -3,4 +3,8 @@
 - [ ] Add 50 move rule
 - [ ] Add Threefold repetition
 - [ ] Add unit tests
+- [ ] Add FEN support
+- [ ] Add PGN support
+- [ ] Implement basic chess engine
+- [ ] Add Stockfish support 
 - [ ] Add a proper README
