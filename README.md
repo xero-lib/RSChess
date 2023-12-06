@@ -4,5 +4,8 @@
   <em>Chess board with rule enforcement and state feedback, written in Rust</em>
 </p>
 
-## Basic Use
-- Demonstration is provided in `main.rs`, further documentation will be provided as it is developed.
+## Basic Use  
+</br>
+<h7><em>Demonstration is provided in `main.rs`</em></h7>  
+
+- Move a piece: `<Board>.r#move(start: &str, end: &str)` where `start` and `end` are letter-number coordinates.
