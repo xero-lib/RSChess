@@ -159,7 +159,7 @@ impl Board {
             y * 8 + x
          */
         let index = y * 8 + x;
-        if  index > 49  {
+        if  index > 63 {
             panic!("Invalid index parameter");
         }
         
@@ -182,7 +182,7 @@ impl Board {
             y * 8 + x
          */
         let index = y * 8 + x;
-        if  index > 49 {
+        if  index > 63 {
             panic!("Invalid index parameter");
         }
         
